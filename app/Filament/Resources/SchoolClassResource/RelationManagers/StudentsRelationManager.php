@@ -14,7 +14,7 @@ class StudentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'students';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form->schema([
             TextInput::make('name')->required(),
@@ -23,7 +23,7 @@ class StudentsRelationManager extends RelationManager
         ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('name'),
