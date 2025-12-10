@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\TextInput;
 
 class SchoolClassResource extends Resource
 {
@@ -23,8 +24,23 @@ class SchoolClassResource extends Resource
     {
         return $form
             ->schema([
-                //
-            ]);
+                Forms\Components\Section::make('Class Details')
+                ->schema([
+                    // 🌟 ADD FIELD FOR CLASS NAME 🌟
+                    TextInput::make('name')
+                        ->label('Class Name')
+                        ->required()
+                        ->maxLength(255),
+
+                    // 🌟 ADD FIELD FOR CAPACITY (optional, but good practice) 🌟
+                    TextInput::make('capacity')
+                        ->numeric()
+                        ->label('Max Capacity')
+                        ->default(30)
+                        ->minValue(1),
+                ])
+                ->columns(2),
+        ]);
     }
 
     public static function table(Table $table): Table

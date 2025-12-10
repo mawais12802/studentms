@@ -14,6 +14,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\SchoolClass;
+
 
 class StudentResource extends Resource
 {
@@ -24,20 +26,28 @@ class StudentResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('name')->required(),
+            TextInput::make('name')
+                ->required()
+                ->maxLength(255),
 
             TextInput::make('email')
                 ->email()
                 ->required()
-                ->unique(ignoreRecord: true),
+                ->unique(ignoreRecord: true)
+                ->maxLength(255),
 
             TextInput::make('age')
                 ->numeric()
-                ->required(),
+                ->required()
+                ->minValue(5)
+                ->maxValue(25),
 
-            Select::make('school_class_id')
-                ->relationship('class', 'name')
-                ->required(),
+Select::make('school_class_id')
+                ->label('School Class') // Label for the field
+                ->relationship('schoolClass', 'name') // Connect to the schoolClass relationship using the 'name' column for display
+                ->required() // This must be required to satisfy the database NOT NULL constraint
+                ->searchable() // Allows user to search classes
+                ->preload(), // Loads all options initially for small tables
         ]);
     }
 
