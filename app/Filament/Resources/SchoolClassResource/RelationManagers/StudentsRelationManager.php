@@ -32,4 +32,9 @@ class StudentsRelationManager extends RelationManager
             Tables\Columns\TextColumn::make('created_at')->date(),
         ]);
     }
+    protected function getTableQuery(): Builder
+    {
+    return parent::getTableQuery()->where('user_id', auth()->id());
+}
+
 }

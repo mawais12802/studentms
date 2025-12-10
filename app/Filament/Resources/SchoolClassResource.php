@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 
+
 class SchoolClassResource extends Resource
 {
     protected static ?string $model = SchoolClass::class;
@@ -53,6 +54,12 @@ class SchoolClassResource extends Resource
                 ->counts('students')
                 ->label('Total Students'),
                 Tables\Columns\TextColumn::make('created_at')->date(),
+                Tables\Columns\TextColumn::make('students_count')
+                ->label('Total Students')
+                ->getStateUsing(function ($record) {
+                return $record->students()->where('user_id', auth()->id())->count();
+                })
+
             ])
             ->filters([
                 //

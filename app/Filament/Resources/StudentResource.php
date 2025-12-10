@@ -9,13 +9,13 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use App\Models\SchoolClass;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\SchoolClass;
-
+use Illuminate\Support\Facades\Auth;
 
 class StudentResource extends Resource
 {
@@ -33,7 +33,6 @@ class StudentResource extends Resource
             TextInput::make('email')
                 ->email()
                 ->required()
-                ->unique(ignoreRecord: true)
                 ->maxLength(255),
 
             TextInput::make('age')
@@ -42,12 +41,23 @@ class StudentResource extends Resource
                 ->minValue(5)
                 ->maxValue(25),
 
-Select::make('school_class_id')
-                ->label('School Class') // Label for the field
-                ->relationship('schoolClass', 'name') // Connect to the schoolClass relationship using the 'name' column for display
-                ->required() // This must be required to satisfy the database NOT NULL constraint
-                ->searchable() // Allows user to search classes
-                ->preload(), // Loads all options initially for small tables
+            Select::make('school_class_id')
+                ->label('School Class')
+                ->relationship('schoolClass', 'name')
+                ->searchable()
+                ->required()
+                ->preload()
+                ->visible(fn () => auth()->check())
+                ->createOptionForm([
+                    TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('capacity')
+                        ->numeric()
+                        ->default(30)
+                        ->minValue(1)
+                        ->required(),
+                ]),
         ]);
     }
 

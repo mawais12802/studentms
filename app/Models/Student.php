@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Student extends Model
 {
+    protected $fillable = ['name', 'email', 'age', 'school_class_id', 'user_id'];
+
     protected static function booted()
     {
         static::creating(function ($student) {
@@ -14,4 +16,8 @@ class Student extends Model
         });
     }
 
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class, 'school_class_id');
+    }
 }
