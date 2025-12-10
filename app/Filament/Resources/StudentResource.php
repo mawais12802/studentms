@@ -92,4 +92,9 @@ Select::make('school_class_id')
             'edit' => Pages\EditStudent::route('/{record}/edit'),
         ];
     }
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', auth()->id());
+    }
+
 }

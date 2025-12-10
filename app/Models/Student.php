@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Student extends Model
 {
-    protected $fillable = ['name','email','age','school_class_id'];
-
-    public function schoolClass(): BelongsTo
+    protected static function booted()
     {
-        // 'school_class_id' is the foreign key by default
-        return $this->belongsTo(SchoolClass::class);
+        static::creating(function ($student) {
+            $student->user_id = auth()->id();
+        });
     }
+
 }

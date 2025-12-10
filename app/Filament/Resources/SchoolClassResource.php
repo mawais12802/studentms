@@ -47,7 +47,12 @@ class SchoolClassResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')->label('Class ID'),
+                Tables\Columns\TextColumn::make('name')->label('Class Name'),
+                Tables\Columns\TextColumn::make('students_count')
+                ->counts('students')
+                ->label('Total Students'),
+                Tables\Columns\TextColumn::make('created_at')->date(),
             ])
             ->filters([
                 //
@@ -79,4 +84,9 @@ class SchoolClassResource extends Resource
             'edit' => Pages\EditSchoolClass::route('/{record}/edit'),
         ];
     }
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', auth()->id());
+    }
+
 }
